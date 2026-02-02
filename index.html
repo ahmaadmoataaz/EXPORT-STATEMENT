@@ -360,14 +360,37 @@ function handlePlatePlaceholder() {
         }
     }
 
-    function submitFinal() { 
-        if (document.getElementById('listBox').options.length === 0) {
-            alert("برجاء إضافة حاوية واحدة على الأقل!");
-            return;
-        }
-        alert('تم اعتماد الشهادة الجمركية بنجاح'); 
+function submitFinal() {
+    // 1. جلب قيم الخانات الأساسية
+    const rNum = document.getElementById('releaseNum').value;
+    const rYear = document.getElementById('releaseYear').value;
+    const rType = document.getElementById('releaseType').value;
+    const customs = document.getElementById('customsOffice').value;
+    const agency = document.getElementById('agency').value;
+    const destination = document.getElementById('destination').value;
+    const client = document.getElementById('clientName').value;
+    const cargo = document.getElementById('cargoType').value;
+    
+    // 2. التحقق من القائمة (ListBox)
+    const listCount = document.getElementById('listBox').options.length;
+
+    // 3. شرط التحقق الشامل
+    if (!rNum || !rYear || !rType || !customs || !agency || !destination || !client || !cargo) {
+        alert("برجاء استكمال كافة البيانات الأساسية للإفراج (الرقم، السنة، العميل، إلخ)!");
+        return;
     }
 
+    if (listCount === 0) {
+        alert("برجاء إضافة حاوية واحدة على الأقل إلى القائمة!");
+        return;
+    }
+location
+.reload();
+    // إذا اجتاز كل الشروط
+    alert('تم اعتماد الشهادة الجمركية بنجاح برقم إفراج: ' + rNum);
+    
+    // اختياري: يمكنك إضافة كود هنا لإرسال البيانات أو طباعتها
+}
     function resetForm() { 
         if(confirm("هل تريد مسح كافة البيانات والبدء من جديد؟")) location.reload(); 
     }
