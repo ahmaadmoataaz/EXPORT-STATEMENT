@@ -27,7 +27,7 @@
             width: 100%;
             max-width: 1000px;
             padding: 30px 40px;
-            border-radius: 20px;
+            border-radius: 40px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
@@ -35,12 +35,12 @@
         .header-logo {
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 1px;
         }
 
         .logo-wrapper {
             position: relative;
-            overflow: hidden; /* ضروري لقص اللمعان خارج حدود اللوجو */
+            overflow: hidden; 
             border-radius: 10px;
             display: inline-block;
         }
@@ -51,7 +51,6 @@
             filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1));
         }
 
-        /* طبقة اللمعان المتحركة */
         .logo-wrapper::before {
             content: "";
             position: absolute;
@@ -66,11 +65,6 @@
                 rgba(255, 255, 255, 0) 100%
             );
             transform: skewX(-25deg);
-            transition: 0s;
-        }
-
-        /* تشغيل الأنيميشن */
-        .logo-wrapper:hover::before, .logo-wrapper::before {
             animation: shine 3s infinite;
         }
 
@@ -79,7 +73,6 @@
             20% { left: 150%; }
             100% { left: 150%; }
         }
-        /* --- نهاية تنسيق اللوجو --- */
 
         h2 {
             text-align: center;
@@ -112,8 +105,8 @@
         .plate-char { width: 40px; text-align: center; }
         .plate-num { width: 100px; text-align: center; }
 
-        .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s; font-family: inherit; }
-        .btn-check { background: var(--primary); color: white; margin-top: 25px; }
+        .btn { padding: 12px 20px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.2s; font-family: inherit; }
+        .btn-check { background: var(--primary); color: white; margin-top: 31px; height: 49px; }
         .btn-add { background: #10b981; color: white; }
         .btn-delete { background: #ef4444; color: white; }
 
@@ -274,9 +267,6 @@
     function checkData() {
         const rNum = document.getElementById('releaseNum').value;
         const rYear = document.getElementById('releaseYear').value;
-        const rType = document.getElementById('releaseType').value;
-        const rCustoms = document.getElementById('customsOffice').value;
-
         if (rNum === "1234" && rYear === "2026") {
             document.getElementById('agency').value = "MAE";
             document.getElementById('destination').value = "جنوب افريقيا";
@@ -291,25 +281,35 @@
 
     function addItem() {
         if (!isFormValid()) return;
+
         const cont = document.getElementById('containerNum').value.toUpperCase();
-        const p1 = document.getElementById('c1').value;
-        const p2 = document.getElementById('c2').value;
-        const p3 = document.getElementById('c3').value;
-        const pN = document.getElementById('pNum').value;
+        const p1 = document.getElementById('c1').value.trim();
+        const p2 = document.getElementById('c2').value.trim();
+        const p3 = document.getElementById('c3').value.trim();
+        const pN = document.getElementById('pNum').value.trim();
         
-        if (cont.length === 0 && pN.length === 0) {
-            alert("برجاء إدخال بيانات الحاوية أو السيارة");
+        // --- الشرط الجديد ---
+        // نحسب عدد الحروف المكتوبة في خانات الحروف
+        let charCount = 0;
+        if (p1 !== "") charCount++;
+        if (p2 !== "") charCount++;
+        if (p3 !== "") charCount++;
+
+        // التحقق: يجب أن يكون رقم السيارة 3 أرقام على الأقل والحروف حرفين على الأقل
+        if (pN.length < 3 || charCount < 2) {
+            alert("خطأ: يجب إدخال رقم السيارة (3 أرقام على الأقل) وحرفين على الأقل للسيارة أولاً قبل الإضافة.");
             return;
         }
 
         const listBox = document.getElementById('listBox');
         const nextNumber = listBox.options.length + 1;
-        const formattedEntry = `${nextNumber}) حاوية: ${cont || '-----------'}   ||   سيارة: [ ${pN || '----'} | ${p1 || '-'} ${p2 || '-'} ${p3 || '-'} ]`;
+        const formattedEntry = `${nextNumber}) حاوية: ${cont || '-----------'}   ||   سيارة: [ ${pN} | ${p1 || '-'} ${p2 || '-'} ${p3 || '-'} ]`;
         
         const option = document.createElement("option");
         option.text = formattedEntry;
         listBox.add(option);
         
+        // مسح الخانات بعد الإضافة
         document.getElementById('containerNum').value = "";
         document.getElementById('c1').value = ""; document.getElementById('c2').value = "";
         document.getElementById('c3').value = ""; document.getElementById('pNum').value = "";
