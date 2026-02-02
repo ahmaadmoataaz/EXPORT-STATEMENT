@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الإفراج الجمركي المطور</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --success: #27ae60; --danger: #e74c3c; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; margin: 20px; color: #333; }
+        .container { max-width: 1000px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin: auto; }
+        h2 { text-align: center; color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin-bottom: 30px; }
+        
+        .row { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; align-items: flex-end; }
+        .form-group { flex: 1; min-width: 220px; display: flex; flex-direction: column; }
+        label { font-weight: 600; margin-bottom: 8px; font-size: 0.95em; color: var(--primary); }
+        
+        input, select { padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; transition: border 0.3s; }
+        input:focus, select:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 5px rgba(52,152,219,0.3); }
+
+        .btn { padding: 12px 25px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-check { background-color: var(--accent); color: white; width: 100%; margin-top: 10px; }
+        .btn-add { background-color: var(--success); color: white; }
+        .btn-delete { background-color: var(--danger); color: white; }
+        .btn-submit { background-color: var(--primary); color: white; flex: 2; }
+        .btn-reset { background-color: #7f8c8d; color: white; flex: 1; }
+
+        .plate-container { display: flex; gap: 5px; direction: ltr; }
+        .plate-char { width: 45px; text-align: center; font-weight: bold; }
+        .plate-num { width: 80px; text-align: center; font-weight: bold; }
+
+        #listBox { width: 100%; height: 120px; margin-top: 15px; border: 2px solid #eee; border-radius: 8px; padding: 10px; }
+        .section-title { width: 100%; font-weight: bold; color: var(--accent); margin-top: 10px; border-right: 4px solid var(--accent); padding-right: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>شاشة بيانات الشهادة الجمركية</h2>
+    
+    <div class="row">
+        <div class="form-group">
+            <label>رقم الإفراج</label>
+            <input type="number" id="releaseNum" placeholder="مثال: 1234">
+        </div>
+        <div class="form-group">
+            <label>سنة الإفراج</label>
+            <input type="number" id="releaseYear" placeholder="2026">
+        </div>
+        <div class="form-group">
+            <label>نوع الإفراج</label>
+            <select id="releaseType">
+                <option value="">اختر النوع...</option>
+                <option>نهائي</option>
+                <option>سماح مؤقت</option>
+                <option>دروباك</option>
+                <option>إعادة تصدير</option>
+                <option>صادر اجنبي</option>
+                <option>تصدير مؤقت</option>
+                <option>رد فوري</option>
+                <option>مرحلة اولي</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>جمرك الإرسال</label>
+            <select id="customsOffice">
+                <option value="">اختر الجمرك...</option>
+                <option>اسكندرية</option>
+                <option>6 أكتوبر</option>
+                <option>العاشر من رمضان</option>
+                <option>مناطق حره عامه</option>
+                <option>بورسعيد</option>
+                <option>شرق بورسعيد</option>
+                <option>اسماعيلية</option>
+                <option>مناطق حره خاصة</option>
+            </select>
+        </div>
+        <div class="form-group" style="min-width: 100px;">
+            <button class="btn btn-check" onclick="checkData()">فحص</button>
+        </div>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+    <div class="row">
+        <div class="form-group">
+            <label>التوكيل</label>
+            <select id="agency">
+                <option value="">اختر التوكيل...</option>
+                <option>MAE</option><option>MSC</option><option>CMA</option>
+                <option>YML</option><option>COS</option><option>HML</option>
+                <option>HLC</option><option>SUD</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>الواجهة النهائية</label>
+            <input type="text" id="destination">
+        </div>
+        <div class="form-group">
+            <label>اسم العميل</label>
+            <select id="clientName">
+                <option value="">اختر العميل...</option>
+                <option>مصر للصباغة والتجهيز</option>
+                <option>المصرية للصناعة</option>
+                <option>العالمية للتجارة</option>
+                <option>مصنع البركة</option>
+                <option>مصنع الامل للصناعة المنزلية</option>
+                <option>مطاحن وادي النيل</option>
+                <option>المصرية للتجارة</option>
+                <option>العالمية للصناعة</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label>نوع المشمول</label>
+            <input type="text" id="cargoType">
+        </div>
+        <div class="form-group">
+            <label>الكمية الإجمالية</label>
+            <div style="display: flex; gap: 5px;">
+                <input type="number" id="totalQty" style="flex: 1;">
+                <select id="qtyUnit" style="flex: 1;">
+                    <option>بالتة</option><option>طرد</option><option>دستة</option>
+                    <option>برميل</option><option>تانك</option><option>صندوق</option>
+                    <option>عدد</option><option>سيارة</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">إضافة الحاويات والسيارات</div>
+    <div class="row" style="background: #fcfcfc; padding: 15px; border: 1px solid #eee; border-radius: 8px;">
+        <div class="form-group">
+            <label>رقم الحاوية</label>
+            <input type="text" id="containerNum" placeholder="MSCU1234567">
+        </div>
+        <div class="form-group">
+            <label>رقم السيارة</label>
+            <div class="plate-container">
+                <input type="text" maxlength="1" class="plate-char" id="c3" placeholder="ج">
+                <input type="text" maxlength="1" class="plate-char" id="c2" placeholder="ب">
+                <input type="text" maxlength="1" class="plate-char" id="c1" placeholder="أ">
+                <input type="number" class="plate-num" id="pNum" placeholder="1234">
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-add" onclick="addItem()">إضافة للقائمة</button>
+            <button class="btn btn-delete" onclick="removeItem()">حذف المحدد</button>
+        </div>
+    </div>
+
+    <select id="listBox" size="5"></select>
+
+    <div class="row" style="margin-top: 30px; gap: 10px;">
+        <button class="btn btn-submit" onclick="submitForm()">اعتماد الشهادة</button>
+        <button class="btn btn-reset" onclick="resetForm()">مسح بيانات الشهادة</button>
+    </div>
+</div>
+
+<script>
+    // وظيفة الفحص والملء التلقائي بناءً على شروطك
+    function checkData() {
+        const rNum = document.getElementById('releaseNum').value;
+        const rYear = document.getElementById('releaseYear').value;
+        const rType = document.getElementById('releaseType').value;
+        const rCustoms = document.getElementById('customsOffice').value;
+
+        // الشرط المطلوب: 1234 - 2026 - نهائي - اسكندرية
+        if (rNum === "1234" && rYear === "2026" && rType === "نهائي" && rCustoms === "اسكندرية") {
+            document.getElementById('agency').value = "MAE";
+            document.getElementById('destination').value = "جنوب افريقيا";
+            document.getElementById('clientName').value = "مصر للصباغة والتجهيز";
+            document.getElementById('cargoType').value = "تفاح";
+            document.getElementById('totalQty').value = "65";
+            document.getElementById('qtyUnit').value = "بالتة";
+            alert("تم العثور على البيانات وملء الخانات تلقائياً");
+        } else {
+            alert("بيانات الفحص غير مطابقة للبيانات المسجلة، يرجى الإكمال يدوياً.");
+        }
+    }
+
+    // إضافة بيانات الحاوية والسيارة للـ List Box
+    function addItem() {
+        const cont = document.getElementById('containerNum').value;
+        const p1 = document.getElementById('c1').value;
+        const p2 = document.getElementById('c2').value;
+        const p3 = document.getElementById('c3').value;
+        const pN = document.getElementById('pNum').value;
+        
+        const listBox = document.getElementById('listBox');
+        
+        if(cont !== "" || pN !== "") {
+            const entry = `حاوية: ${cont || '---'} | سيارة: ${pN} ${p1} ${p2} ${p3}`;
+            const option = document.createElement("option");
+            option.text = entry;
+            listBox.add(option);
+            
+            // مسح الخانات بعد الإضافة
+            document.getElementById('containerNum').value = "";
+            document.getElementById('c1').value = ""; document.getElementById('c2').value = "";
+            document.getElementById('c3').value = ""; document.getElementById('pNum').value = "";
+        } else {
+            alert("برجاء إدخال رقم الحاوية أو السيارة");
+        }
+    }
+
+    function removeItem() {
+        const listBox = document.getElementById('listBox');
+        if(listBox.selectedIndex >= 0) {
+            listBox.remove(listBox.selectedIndex);
+        } else {
+            alert("اختر عنصراً من القائمة لحذفه");
+        }
+    }
+
+    function resetForm() {
+        if(confirm("سيتم مسح كافة البيانات، هل أنت متأكد؟")) {
+            window.location.reload();
+        }
+    }
+
+    function submitForm() {
+        alert("تم اعتماد الشهادة وحفظ البيانات بنجاح");
+    }
+</script>
+
+</body>
+</html>
