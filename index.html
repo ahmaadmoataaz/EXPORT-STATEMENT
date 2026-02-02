@@ -194,10 +194,11 @@
         <div class="form-group">
 <label id="carLabel">رقم السيارة</label>
             <div class="plate-container" id="plateContainer">
+                                <input type="text" maxlength="4" class="plate-num" id="pNum" placeholder="1234" oninput="validateNumbers(this)">
                 <input type="text" maxlength="1" class="plate-char" id="c3" placeholder="ج" oninput="validateArabic(this)" onfocus="activatePlateFocus()" onblur="deactivatePlateFocus()">
                 <input type="text" maxlength="1" class="plate-char" id="c2" placeholder="ب" oninput="validateArabic(this)" onfocus="activatePlateFocus()" onblur="deactivatePlateFocus()">
                 <input type="text" maxlength="1" class="plate-char" id="c1" placeholder="أ" oninput="validateArabic(this)" onfocus="activatePlateFocus()" onblur="deactivatePlateFocus()">
-                <input type="text" maxlength="4" class="plate-num" id="pNum" placeholder="1234" oninput="validateNumbers(this)">
+
             </div>
         </div>
         <div style="display:flex; align-items:flex-end; gap:15px;">
@@ -316,7 +317,7 @@
 
     // تنفيذ الإضافة للقائمة
     const lb = document.getElementById('listBox');
-    const entry = `${lb.options.length + 1}) حاوية: ${cont} || سيارة: [ ${pN} | ${p1} ${p2} ${p3} ]`;
+const entry = `${lb.options.length + 1}) حاوية: ${cont} || سيارة: [ ${pN} | ${p1} ${p2} ${p3} ]`;
     const opt = document.createElement("option");
     opt.text = entry;
     lb.add(opt);
